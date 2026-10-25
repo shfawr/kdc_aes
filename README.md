@@ -1,4 +1,19 @@
-# KDC + AES Manual (Tugas Keamanan Informasi)
+# Cara Run versi Dyah
+
+1. Download semua file, yg kuubah si cuman nama folder test jadi tests, file main.py, file alice.py, bob.py, kdc.py, sama chat.py.
+2. Buka CDM (Command Prompt) di laptop 1 trus cek ip nya pake ipconfig
+3. Trus buka folder tugasnya
+4. trus jalanin command buat kdc ini `python main.py kdc --host 192.168.1.2 --port 5000` ip nya sesuaikan
+5. trus buka cdm di laptop 2, cek ip jg pake ipconfig
+6. Trus buka folder, trus command buat alice yg ini `python main.py alice --kdc-host 192.168.1.2 --kdc-port 5000 --host 192.168.1.8 --port 5001` ip jangan lupa disesuaikan
+7. trus lanjut ke terminal vm, mirip caranya cuman skrg command buat bob `python3 main.py bob --alice-host 192.168.1.8 --alice-port 5001` jangan lupa disesuaikan ip jg pake ip a ya di vm 
+8. dah si skrg dah bisa chatan itu Bob sm Alice
+9. ok bye dunia ak ngantok
+10. good luck, jangan stres karena tugas kita dah oke mantap josjis
+
+---
+
+KDC + AES Manual (Tugas Keamanan Informasi)
 
 Implementasi pembelajaran dengan:
 - KDC, Alice, dan Bob sebagai tiga proses terpisah.
@@ -55,13 +70,13 @@ python main.py kdc --host 0.0.0.0 --port 5000
 KDC bind ke semua interface; Alice memakai IP LAN KDC untuk menghubunginya.
 
 Terminal Alice:
-```bash
+```
 python main.py alice --kdc-host 192.168.1.10 --kdc-port 5000 --host 0.0.0.0 --port 5001
 ```
 Alice bind ke semua interface agar Bob bisa masuk. Gunakan IP LAN Alice sebagai tujuan Bob.
 
 Terminal Bob:
-```bash
+```
 python main.py bob --alice-host 192.168.1.11 --alice-port 5001
 ```
 Sesuaikan IP aktual. Izinkan koneksi TCP pada port 5000 dan 5001 di firewall. Pastikan ketiga perangkat berada pada jaringan yang saling terjangkau.
