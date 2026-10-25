@@ -13,7 +13,7 @@ def run_alice(kdc_host, kdc_port, host, port, ka_text):
         listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         listener.bind((host, port))
         listener.listen(1)
-        listener.settimeout(30)
+        listener.settimeout(300)
         print(f"[Alice] Menunggu Bob pada {host}:{port} (listener siap).")
         with connect(kdc_host, kdc_port) as kdc:
             send_json(kdc, {"type":"request", "id_a":"Alice", "id_b":"Bob", "n1":n1})
@@ -29,7 +29,7 @@ def run_alice(kdc_host, kdc_port, host, port, ka_text):
         print("[Alice] Menunggu Bob menghubungkan diri...")
         conn, addr = listener.accept()
         with conn:
-            conn.settimeout(30)
+            conn.settimeout(300)
             print(f"[Alice] Bob terhubung dari {addr[0]}:{addr[1]}.")
             send_json(conn, {"type":"ticket", "ticket":response["bob_ticket"]})
             challenge = recv_json(conn)
