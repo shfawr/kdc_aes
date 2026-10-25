@@ -1,3 +1,390 @@
+# IMPLEMENTASI KEY DISTRIBUTION CENTER (KDC) DAN AES-128 MANUAL
+
+## Identitas Kelompok
+
+| No | Name | NRP |
+| -- | ---  | --- |
+| 1 | Shifa Alya Dewi | 5025241176 |
+| 2 | Dyah Utami Kesuma Dewi | 5025241186 |
+
+---
+
+## 1. Deskripsi Proyek
+
+Proyek ini merupakan implementasi sistem distribusi kunci menggunakan **Key Distribution Center (KDC)** dan algoritma **Advanced Encryption Standard (AES)** sebagai bagian dari tugas praktikum mata kuliah Keamanan Informasi.
+
+Sistem melibatkan tiga entitas utama, yaitu KDC, Alice, dan Bob. KDC berperan dalam distribusi session key, sedangkan Alice dan Bob menggunakan session key tersebut untuk membangun komunikasi terenkripsi. Implementasi dikembangkan menggunakan Python dengan komunikasi jaringan berbasis TCP socket dan algoritma AES yang diimplementasikan secara manual.
+
+Proyek ini juga mencakup pengujian enkripsi dan dekripsi, validasi key, komunikasi pesan dua arah, serta pengamatan pertukaran data menggunakan Wireshark.
+
+### Tujuan Proyek
+
+- Mengimplementasikan skenario distribusi kunci yang melibatkan KDC, Alice, dan Bob.
+- Memahami penerapan AES-128 melalui implementasi manual.
+- Membangun komunikasi dua arah antara Alice dan Bob menggunakan session key.
+- Menggunakan key dan plaintext berbasis ASCII serta menampilkan ciphertext dalam format hexadecimal (Hex).
+- Menguji komunikasi antarentitas melalui jaringan dengan alamat IP berbeda.
+- Mendokumentasikan proses pengembangan, pengujian, dan kontribusi anggota menggunakan Git dan GitHub.
+
+---
+
+## 2. Arsitektur Sistem
+
+Sistem dibangun menggunakan tiga entitas dengan tanggung jawab yang berbeda.
+
+| Entitas | Tanggung Jawab |
+|---|---|
+| **KDC** | Mengelola proses distribusi session key berdasarkan protokol yang diimplementasikan. |
+| **Alice** | Mengajukan permintaan kepada KDC, memproses informasi distribusi kunci, dan menjadi endpoint server chat. |
+| **Bob** | Memproses informasi atau tiket distribusi kunci, melakukan verifikasi sesuai protokol, dan menghubungi Alice untuk memulai komunikasi. |
+
+### Topologi Pengujian
+
+Implementasi pengujian menggunakan dua laptop dan satu lingkungan Ubuntu VM.
+
+| Perangkat | Entitas | Port |
+|---|---|---|
+| Laptop 1 — Windows | KDC | TCP 5000 |
+| Laptop 2 — Windows | Alice | TCP 5001 |
+| Ubuntu VM | Bob | Klien Alice |
+
+Setiap entitas harus menggunakan alamat IP aktual yang berbeda dan dapat saling dijangkau melalui jaringan yang digunakan. Alamat IP tidak ditetapkan secara permanen dalam dokumentasi karena dapat berubah sesuai konfigurasi jaringan.
+
+### Alur Komunikasi
+
+1. Alice mengirimkan permintaan distribusi session key kepada KDC.
+2. KDC memproses permintaan dan menyiapkan informasi distribusi kunci.
+3. Alice menerima serta memproses respons dari KDC.
+4. Alice dan Bob menjalankan proses pertukaran informasi dan verifikasi sesuai protokol.
+5. Setelah proses berhasil, Alice dan Bob dapat bertukar pesan menggunakan session key.
+
+Urutan pesan dan mekanisme verifikasi mengikuti skenario yang diterapkan dalam kode serta materi perkuliahan.
+
+---
+
+## 3. Teknologi yang Digunakan
+
+| Teknologi | Penggunaan |
+|---|---|
+| Python 3 | Bahasa pemrograman utama |
+| TCP Socket | Komunikasi jaringan antare ntitas |
+| AES-128 Manual | Enkripsi dan dekripsi pesan |
+| ASCII | Representasi key dan plaintext |
+| Hexadecimal | Representasi ciphertext |
+| `unittest` | Pengujian otomatis |
+| Wireshark | Analisis paket jaringan |
+| Git & GitHub | Version control dan kolaborasi |
+
+---
+
+## 4. Struktur Repository
+
+```text
+kdc_aes/
+├── main.py
+├── kdc.py
+├── alice.py
+├── bob.py
+├── chat.py
+├── aes/
+├── utils/
+├── tests/
+└── README.md
+```
+
+| File/Folder | Deskripsi |
+|---|---|
+| `main.py` | Entry point untuk menjalankan program berdasarkan peran. |
+| `kdc.py` | Implementasi layanan Key Distribution Center. |
+| `alice.py` | Implementasi Alice dan interaksinya dengan KDC. |
+| `bob.py` | Implementasi proses Bob dalam distribusi kunci dan komunikasi. |
+| `chat.py` | Pengelolaan pertukaran pesan Alice dan Bob. |
+| `aes/` | Modul implementasi algoritma AES manual. |
+| `utils/` | Fungsi pendukung encoding, validasi key, dan jaringan. |
+| `tests/` | Pengujian otomatis AES dan encoding. |
+
+**Catatan:** pastikan nama folder pengujian sesuai dengan repository. Jika folder yang tersedia bernama `test/`, gunakan nama tersebut pada struktur dan perintah pengujian.
+
+---
+
+## 5. Implementasi AES-128 Manual
+
+AES-128 merupakan algoritma kriptografi simetris yang menggunakan key sepanjang 128 bit atau 16 byte. Pada proyek ini, proses inti AES diimplementasikan secara manual untuk memahami tahapan enkripsi dan dekripsi tanpa menyerahkan proses inti kepada fungsi AES siap pakai dari library kriptografi.
+
+Komponen algoritma yang relevan meliputi:
+
+- **Key Expansion:** menghasilkan round key dari key utama.
+- **SubBytes:** melakukan substitusi byte melalui S-Box.
+- **ShiftRows:** melakukan pergeseran baris pada state.
+- **MixColumns:** melakukan transformasi pada kolom state.
+- **AddRoundKey:** menggabungkan state dengan round key menggunakan XOR.
+- **Inverse Transformations:** transformasi invers untuk proses dekripsi.
+
+Komponen tersebut perlu disesuaikan dengan implementasi aktual pada folder `aes/`.
+
+### Format Data
+
+| Komponen | Format |
+|---|---|
+| Key | ASCII, 16 karakter untuk AES-128 |
+| Plaintext | Teks ASCII |
+| Ciphertext | Hexadecimal (Hex) |
+
+Contoh representasi keluaran:
+
+```text
+Plaintext  : Halo Bob
+Ciphertext : [Ciphertext Hex hasil program]
+```
+
+Ciphertext aktual bergantung pada key, mode operasi, IV, padding, dan plaintext yang digunakan. Oleh karena itu, contoh di atas hanya menunjukkan format keluaran, bukan hasil enkripsi tertentu.
+
+---
+
+## 6. Instalasi dan Persiapan
+
+Pastikan Python 3 telah terpasang pada setiap perangkat yang menjalankan program.
+
+### Windows
+
+Buka Command Prompt dan periksa versi Python:
+
+```cmd
+python --version
+```
+
+### Ubuntu
+
+Buka terminal dan jalankan:
+
+```bash
+python3 --version
+```
+
+### Mengambil Repository
+
+Jika repository belum tersedia pada perangkat:
+
+```bash
+git clone [URL_REPOSITORY]
+cd kdc_aes
+```
+
+Jika proyek sudah tersedia:
+
+```bash
+cd kdc_aes
+git pull
+```
+
+Pastikan perubahan lokal telah disimpan atau di-commit sebelum melakukan `git pull`.
+
+---
+
+## 7. Konfigurasi Jaringan
+
+KDC, Alice, dan Bob harus dapat saling menjangkau sesuai alur protokol. Untuk pengujian lintas perangkat, pastikan setiap entitas menggunakan IP aktual yang berbeda.
+
+Periksa IP pada Windows menggunakan:
+
+```cmd
+ipconfig
+```
+
+Periksa IP pada Ubuntu menggunakan:
+
+```bash
+ip -4 addr
+```
+
+Contoh format alamat IP:
+
+| Entitas | Alamat IP |
+|---|---|
+| KDC | `[IP_KDC]` |
+| Alice | `[IP_ALICE]` |
+| Bob | `[IP_BOB]` |
+
+Ganti placeholder dengan IP yang benar-benar digunakan ketika pengujian.
+
+### Persyaratan Konektivitas
+
+- Ketiga entitas menggunakan alamat IP yang berbeda.
+- Alice dapat menjangkau KDC pada TCP port 5000.
+- Bob dapat menjangkau Alice pada TCP port 5001.
+- Firewall mengizinkan koneksi pada port yang diperlukan.
+- Konfigurasi VMware memungkinkan Ubuntu VM mengakses jaringan tujuan.
+
+---
+
+## 8. Cara Menjalankan Program
+
+Jalankan setiap entitas pada terminal atau perangkat yang sesuai.
+
+### A. KDC — Windows Laptop 1
+
+Buka Command Prompt, lalu masuk ke folder proyek:
+
+```cmd
+cd path\ke\kdc_aes
+```
+
+Jalankan KDC:
+
+```cmd
+python main.py kdc --host [IP_KDC] --port 5000
+```
+
+Ganti `[IP_KDC]` dengan IP aktual KDC. Masukkan key sesuai permintaan program.
+
+### B. Alice — Windows Laptop 2
+
+Buka Command Prompt pada Laptop 2:
+
+```cmd
+cd path\ke\kdc_aes
+```
+
+Jalankan Alice:
+
+```cmd
+python main.py alice --kdc-host [IP_KDC] --kdc-port 5000 --host [IP_ALICE] --port 5001
+```
+
+Keterangan:
+
+- `--kdc-host`: alamat IP KDC.
+- `--kdc-port`: port layanan KDC.
+- `--host`: alamat bind Alice yang didukung oleh program.
+- `--port`: port server chat Alice.
+
+Gunakan IP aktual dan pastikan alamat bind sesuai dengan interface jaringan Alice.
+
+### C. Bob — Ubuntu VM
+
+Buka terminal Ubuntu:
+
+```bash
+cd ~/kdc_aes
+```
+
+Jalankan Bob:
+
+```bash
+python3 main.py bob --alice-host [IP_ALICE] --alice-port 5001
+```
+
+Ganti `[IP_ALICE]` dengan IP aktual Alice yang dapat dijangkau dari Ubuntu VM.
+
+### Urutan Eksekusi
+
+1. Jalankan KDC.
+2. Jalankan Alice.
+3. Jalankan Bob.
+4. Pastikan distribusi kunci dan verifikasi berhasil.
+5. Uji komunikasi pesan dari Alice ke Bob.
+6. Uji balasan dari Bob ke Alice.
+
+**Penting:** perintah di atas harus disesuaikan jika argumen CLI pada versi kode aktual berbeda. Periksa dengan `python main.py --help` di Windows atau `python3 main.py --help` di Ubuntu.
+
+---
+
+## 9. Pengujian
+
+Pengujian dilakukan untuk memverifikasi fungsi AES, distribusi session key, validasi key, dan komunikasi jaringan.
+
+### Pengujian AES
+
+```bash
+python3 main.py test
+```
+
+### Pengujian Otomatis
+
+Jika folder pengujian bernama `tests/`:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+Jika folder pengujian masih bernama `test/`:
+
+```bash
+python3 -m unittest discover -s test -v
+```
+
+### Skenario Pengujian
+
+| No. | Skenario | Kriteria Keberhasilan |
+|---|---|---|
+| 1 | AES test vector | Hasil enkripsi cocok dengan test vector standar. |
+| 2 | Enkripsi dan dekripsi | Plaintext dapat dipulihkan dengan key yang benar. |
+| 3 | Distribusi session key | Alice dan Bob memperoleh session key yang sesuai. |
+| 4 | Key salah | Program menolak proses dengan penanganan error yang jelas. |
+| 5 | Alice mengirim pesan | Bob menerima pesan dengan benar. |
+| 6 | Bob membalas pesan | Alice menerima balasan dengan benar. |
+| 7 | Format ciphertext | Ciphertext ditampilkan dalam format Hex. |
+| 8 | Pengujian jaringan | Komunikasi berhasil menggunakan IP aktual yang berbeda. |
+
+Catat hasil aktual setiap pengujian. Status berhasil hanya diberikan setelah skenario benar-benar dijalankan dan diverifikasi.
+
+---
+
+## 10. Dokumentasi Wireshark
+
+Wireshark digunakan untuk mengamati komunikasi jaringan yang berlangsung antara entitas.
+
+### Display Filter
+
+```text
+tcp.port == 5000 || tcp.port == 5001
+```
+
+### Bukti yang Dikumpulkan
+
+1. Paket komunikasi Alice dengan KDC.
+2. Paket komunikasi Alice dengan Bob.
+3. Alamat IP sumber dan tujuan.
+4. Payload ciphertext dalam format Hex.
+5. Bukti komunikasi dua arah.
+6. Interface capture dan filter yang digunakan.
+
+Gunakan interface jaringan yang sesuai. Jika komunikasi melewati VMware atau NAT, tampilan paket dapat berbeda antara interface fisik dan interface virtual.
+
+---
+
+## 11. Pembagian Tugas Kelompok
+
+### Anggota 1 — KDC dan Protokol Distribusi Kunci
+
+Tanggung jawab utama:
+
+- Mengembangkan dan memelihara `kdc.py`.
+- Mengimplementasikan proses distribusi kunci pada `alice.py`.
+- Menangani permintaan dan respons KDC.
+- Menguji penggunaan key dan penanganan key salah.
+- Mendokumentasikan alur protokol sesuai materi perkuliahan.
+
+### Anggota 2 — AES Manual dan Komunikasi
+
+Tanggung jawab utama:
+
+- Mengimplementasikan AES manual pada folder `aes/`.
+- Mengembangkan fungsi encoding dan validasi pada folder `utils/`.
+- Mengembangkan komunikasi pada `chat.py` dan `bob.py`.
+- Membuat dan menjalankan pengujian otomatis.
+- Mendokumentasikan hasil pengujian dan Wireshark.
+
+### Pekerjaan Bersama
+
+- Integrasi seluruh modul.
+- Pengujian end-to-end.
+- Pengujian menggunakan tiga IP berbeda.
+- Penyusunan README dan dokumentasi.
+- Persiapan demonstrasi dan presentasi.
+- 
+---
+
 # Cara Run versi Dyah
 
 1. Download semua file, yg kuubah si cuman nama folder test jadi tests, file main.py, file alice.py, bob.py, kdc.py, sama chat.py.
