@@ -7,7 +7,7 @@ from chat import run_chat
 
 def run_bob(alice_host, alice_port, kb_text):
     kb = require_aes128_key(kb_text)
-    with connect(alice_host, alice_port, timeout=30) as conn:
+    with connect(alice_host, alice_port, timeout=300) as conn:
         print(f"[Bob] Terhubung ke Alice di {alice_host}:{alice_port}.")
         msg = recv_json(conn)
         if msg.get("type") != "ticket":
