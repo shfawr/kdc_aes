@@ -22,21 +22,21 @@ python -m unittest discover -s tests -v
 ## 3. Pengujian awal pada satu laptop
 Gunakan `127.0.0.1` untuk tes lokal. Buka tiga terminal di folder proyek.
 
-Terminal 1:
-```bash
-python main.py kdc --host 127.0.0.1 --port 5000
+Terminal 1 (kdc):
+```
+python main.py kdc --host 192.168.1.2 --port 5000
 ```
 Masukkan key ASCII 16 karakter saat diminta, misalnya `AliceKey12345678` dan `BobKey1234567890`.
 
-Terminal 2:
-```bash
-python main.py alice --kdc-host 127.0.0.1 --kdc-port 5000 --host 127.0.0.1 --port 5001
+Terminal 2 (alice):
+```
+python main.py alice --kdc-host 192.168.1.2 --kdc-port 5000 --host 192.168.1.8 --port 5001
 ```
 Masukkan K_A yang sama persis dengan KDC.
 
-Terminal 3:
-```bash
-python main.py bob --alice-host 127.0.0.1 --alice-port 5001
+Terminal 3 (bob) (vm):
+```
+python3 main.py bob --alice-host 192.168.1.8 --alice-port 5001
 ```
 Masukkan K_B yang sama persis dengan KDC.
 
