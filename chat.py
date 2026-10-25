@@ -24,43 +24,56 @@ def run_chat(sock, role, session_key):
                 obj = recv_json(sock)
                 typ = obj.get("type")
                 if typ == "quit":
-                    print(f"\\n[{role}] Pihak lain menutup chat.")
+                    print(f"\n[{role}] Pihak lain menutup chat.")
                     stop.set()
                     break
                 if typ == "chat":
-                    plaintext = decrypt_cbc(active_key(), from_hex(obj["data"]))
-                    print(f"\\n[{role} menerima] {plaintext.decode('ascii')}")
-                    print("> ", end="", flush=True)
+                    # Tambah try-except biar kalau gagal dekripsi 1 pesan, program nggak mati
+                    try:
+                        plaintext = decrypt_cbc(active_key(), from_hex(obj["data"]))
+                        sender = "Bob" if role == "Alice" else "Alice"
+                        print(f"\n{sender}: {plaintext.decode('ascii')}")
+                    except Exception:
+                        print(f"\n[{role}] (Pesan masuk, tapi gagal didekripsi)")
+                    print(f"{role}: ", end="", flush=True)
                 elif typ == "rekey_offer":
-                    old_key = active_key()
-                    new_key = require_aes128_key(
-                        decrypt_cbc(old_key, from_hex(obj["data"])).decode("ascii")
-                    )
-                    # Send acknowledgement under the OLD key, then activate new key.
-                    send_json(sock, {"type":"rekey_ack",
-                                     "data":to_hex(encrypt_cbc(old_key, b"ACK"))})
-                    with lock:
-                        state["key"] = new_key
-                    print(f"\\n[{role}] Session key baru diterima dan diaktifkan.")
-                    print("> ", end="", flush=True)
+                    try:
+                        old_key = active_key()
+                        new_key = require_aes128_key(
+                            decrypt_cbc(old_key, from_hex(obj["data"])).decode("ascii")
+                        )
+                        # Send acknowledgement under the OLD key, then activate new key.
+                        send_json(sock, {"type":"rekey_ack",
+                                         "data":to_hex(encrypt_cbc(old_key, b"ACK"))})
+                        with lock:
+                            state["key"] = new_key
+                        print(f"\n[{role}] Session key baru diterima dan diaktifkan.")
+                    except Exception:
+                        print(f"\n[{role}] (Gagal memproses key baru)")
+                    print(f"{role}: ", end="", flush=True)
                 elif typ == "rekey_ack":
-                    old_key = active_key()
-                    ack = decrypt_cbc(old_key, from_hex(obj["data"]))
-                    if ack != b"ACK":
-                        raise ValueError("Acknowledgement rekey tidak valid.")
-                    with lock:
-                        pending = state["pending"]
-                        if pending is None:
-                            raise ValueError("Acknowledgement rekey tidak diminta.")
-                        state["key"] = pending
-                        state["pending"] = None
-                    print(f"\\n[{role}] Session key baru dikonfirmasi dan diaktifkan.")
-                    print("> ", end="", flush=True)
+                    try:
+                        old_key = active_key()
+                        ack = decrypt_cbc(old_key, from_hex(obj["data"]))
+                        if ack != b"ACK":
+                            raise ValueError("Acknowledgement rekey tidak valid.")
+                        with lock:
+                            pending = state["pending"]
+                            if pending is None:
+                                raise ValueError("Acknowledgement rekey tidak diminta.")
+                            state["key"] = pending
+                            state["pending"] = None
+                        print(f"\n[{role}] Session key baru dikonfirmasi dan diaktifkan.")
+                    except Exception:
+                        print(f"\n[{role}] (Gagal konfirmasi key baru)")
+                    print(f"{role}: ", end="", flush=True)
                 else:
-                    print(f"\\n[{role}] Jenis pesan tidak dikenal: {typ}")
-        except (ConnectionError, OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+                    print(f"\n[{role}] Jenis pesan tidak dikenal: {typ}")
+                    print(f"{role}: ", end="", flush=True)
+        except (ConnectionError, OSError, json.JSONDecodeError) as exc:
+            # Hanya matikan jika koneksi emang benar-benar putus
             if not stop.is_set():
-                print(f"\\n[{role}] Penerimaan berhenti: {exc}")
+                print(f"\n[{role}] Penerimaan berhenti: {exc}")
             stop.set()
 
     thread = threading.Thread(target=receiver, daemon=True)
@@ -70,7 +83,7 @@ def run_chat(sock, role, session_key):
     try:
         while not stop.is_set():
             try:
-                line = input("> ")
+                line = input(f"{role}: ")
             except EOFError:
                 line = "/quit"
             if line.strip() == "/quit":
