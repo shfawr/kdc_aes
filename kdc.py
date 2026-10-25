@@ -13,7 +13,7 @@ def run_kdc(host, port, ka_text, kb_text):
         print(f"[KDC] Listening on {host}:{port}; menunggu satu permintaan.")
         conn, addr = server.accept()
         with conn:
-            conn.settimeout(15)
+            conn.settimeout(300)
             try:
                 req = recv_json(conn)
                 if req.get("type") != "request" or req.get("id_a") != "Alice" or req.get("id_b") != "Bob":
