@@ -3,7 +3,7 @@ from getpass import getpass
 from kdc import run_kdc
 from alice import run_alice
 from bob import run_bob
-from test.test_aes import run_aes_self_test
+from tests.test_aes import run_aes_self_test
 
 def read_key(label):
     while True:
