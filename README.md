@@ -353,6 +353,146 @@ Gunakan interface jaringan yang sesuai. Jika komunikasi melewati VMware atau NAT
 
 ---
 
+
+## Dokumentasi Implementasi dan Pengujian
+
+Bagian ini menyajikan dokumentasi hasil implementasi sistem Key Distribution Center (KDC) dan AES-128 Manual. Pengujian dilakukan menggunakan tiga entitas pada alamat IP berbeda untuk memverifikasi proses distribusi kunci, enkripsi dan dekripsi, komunikasi dua arah, serta pertukaran paket melalui jaringan.
+
+### 1. Konfigurasi Lingkungan Pengujian
+
+Pengujian sistem dilakukan menggunakan dua laptop Windows dan satu Ubuntu Virtual Machine (VM). Setiap entitas dijalankan pada alamat IP yang berbeda untuk mengimplementasikan komunikasi jaringan antara KDC, Alice, dan Bob.
+
+| Entitas | Perangkat | IP Address | Port |
+|---|---|---|---|
+| KDC | Windows Laptop 1 | `192.168.1.14` | `5000` |
+| Alice | Windows Laptop 2 | `192.168.1.12` | `5001` |
+| Bob | Ubuntu Virtual Machine | `192.168.1.13` | Client |
+
+Ketiga perangkat menggunakan jaringan lokal dengan subnet `192.168.1.0/24`. Konfigurasi tersebut digunakan untuk menguji distribusi session key dan komunikasi terenkripsi antara Alice dan Bob.
+
+### 2. Pengujian Algoritma AES-128
+
+Pengujian algoritma AES-128 dilakukan untuk memverifikasi bahwa proses enkripsi dan dekripsi menghasilkan keluaran yang sesuai dengan skenario pengujian.
+
+![Pengujian AES](screenshots/01-aes-test.png)
+
+*Gambar 1. Hasil pengujian implementasi AES-128 manual.*
+
+**Hasil pengujian:** [Isi berdasarkan output pengujian aktual, misalnya jumlah test yang berhasil dan gagal.]
+
+### 3. Pengujian Key Distribution Center (KDC)
+
+KDC dijalankan sebagai layanan distribusi session key yang digunakan dalam proses komunikasi Alice dan Bob.
+
+![KDC Running](screenshots/02-kdc-running.png)
+
+*Gambar 2. Proses menjalankan KDC pada alamat IP 192.168.1.14 dan port 5000.*
+
+Hasil Pengujian: Server KDC berhasil dijalankan pada 192.168.1.14:5000 dan berada dalam kondisi menunggu permintaan dari Alice.
+
+### 4. Pengujian Distribusi Session Key
+
+#### 4.1 Proses Alice
+
+Alice menghubungi KDC untuk melakukan proses distribusi session key sesuai protokol yang diimplementasikan.
+
+![Alice Key Distribution](screenshots/03-alice-key.png)
+
+*Gambar 3. Proses Alice melakukan komunikasi dengan KDC.*
+
+Hasil Pengujian: Alice berhasil memverifikasi respons KDC, menerima koneksi Bob dari 192.168.1.13, dan menyelesaikan langkah 1–5 protokol. Setelah autentikasi berhasil, komunikasi menggunakan AES-CBC dinyatakan aktif oleh program.
+
+#### 4.2 Proses Bob
+
+Bob menerima dan memproses informasi yang diperlukan untuk membangun komunikasi terenkripsi dengan Alice.
+
+![Bob Key Verification](screenshots/04-bob-key.png)
+
+*Gambar 4. Proses Bob melakukan koneksi dan verifikasi sesuai protokol.*
+
+Hasil Pengujian: Bob berhasil terhubung ke Alice, memperoleh session key dari tiket, dan menyelesaikan langkah 1–5 protokol. Program kemudian mengaktifkan sesi komunikasi AES-CBC.
+
+### 5. Pengujian Komunikasi Terenkripsi Dua Arah
+
+Pengujian dilakukan untuk memastikan Alice dan Bob dapat saling mengirim serta menerima pesan menggunakan session key yang telah didistribusikan.
+
+#### 5.1 Komunikasi pada Sisi Alice
+
+![Alice Chat](screenshots/05-alice-chat.png)
+
+*Gambar 8. Pengiriman pesan dan penerimaan balasan pada terminal Alice.*
+
+**Hasil pengujian:** [Tuliskan pesan uji dan hasil penerimaan pada Alice.]
+
+#### 5.2 Komunikasi pada Sisi Bob
+
+![Bob Chat](screenshots/06-bob-chat.png)
+
+*Gambar 9. Penerimaan pesan dan pengiriman balasan pada terminal Bob.*
+
+**Hasil pengujian:** [Tuliskan pesan uji dan hasil penerimaan pada Bob.]
+
+### 6. Analisis Paket Jaringan Menggunakan Wireshark
+
+Pengamatan paket dilakukan menggunakan Wireshark untuk memeriksa komunikasi antarpihak, alamat IP sumber dan tujuan, serta data yang dikirim melalui TCP.
+
+#### 6.1 Komunikasi KDC dan Alice
+
+Display filter:
+
+```text
+tcp.port == 5000
+```
+
+![Wireshark KDC](screenshots/07-wireshark-kdc.png)
+
+*Gambar 10. Capture komunikasi TCP antara KDC dan Alice pada port 5000.*
+
+**Hasil analisis:** [Jelaskan IP sumber, IP tujuan, dan informasi paket yang terlihat.]
+
+#### 6.2 Komunikasi Alice dan Bob
+
+Display filter:
+
+```text
+tcp.port == 5001
+```
+
+![Wireshark Chat](screenshots/08-wireshark-chat.png)
+
+*Gambar 11. Capture komunikasi TCP antara Alice dan Bob pada port 5001.*
+
+**Hasil analisis:** [Jelaskan arah komunikasi dan paket yang berhasil diamati.]
+
+#### 6.3 Analisis Payload Ciphertext
+
+![Wireshark Payload](screenshots/12-wireshark-payload.png)
+
+*Gambar 12. Representasi data aplikasi pada paket komunikasi terenkripsi.*
+
+**Hasil analisis:** [Jelaskan format payload yang terlihat dan apakah plaintext muncul secara langsung.]
+
+### 7. Ringkasan Hasil Pengujian
+
+| No. | Skenario Pengujian | Hasil | Status |
+|---|---|---|---|
+| 1 | Pengujian algoritma AES-128 | [Isi hasil] | [Lulus/Gagal] |
+| 2 | Menjalankan layanan KDC | [Isi hasil] | [Lulus/Gagal] |
+| 3 | Distribusi session key ke Alice | [Isi hasil] | [Lulus/Gagal] |
+| 4 | Proses verifikasi Bob | [Isi hasil] | [Lulus/Gagal] |
+| 5 | Pengiriman pesan Alice ke Bob | [Isi hasil] | [Lulus/Gagal] |
+| 6 | Pengiriman pesan Bob ke Alice | [Isi hasil] | [Lulus/Gagal] |
+| 7 | Capture komunikasi KDC–Alice | [Isi hasil] | [Lulus/Gagal] |
+| 8 | Capture komunikasi Alice–Bob | [Isi hasil] | [Lulus/Gagal] |
+| 9 | Pemeriksaan ciphertext | [Isi hasil] | [Lulus/Gagal] |
+
+### 8. Kesimpulan Pengujian
+
+Berdasarkan hasil pengujian yang telah dilakukan, [jelaskan apakah implementasi AES-128, distribusi session key, dan komunikasi dua arah berjalan sesuai tujuan]. Pengamatan menggunakan Wireshark menunjukkan [jelaskan hasil pengamatan paket dan representasi ciphertext].
+
+Pengujian ini digunakan untuk mengevaluasi kesesuaian implementasi terhadap kebutuhan tugas dan mengidentifikasi keterbatasan sistem yang masih perlu diperhatikan.
+
+
 ## 11. Pembagian Tugas Kelompok
 
 ### Anggota 1 — KDC dan Protokol Distribusi Kunci
