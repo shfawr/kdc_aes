@@ -420,17 +420,15 @@ Pengujian dilakukan untuk memastikan Alice dan Bob dapat saling mengirim serta m
 
 ![Alice Chat](screenshots/05-alice-chat.png)
 
-*Gambar 8. Pengiriman pesan dan penerimaan balasan pada terminal Alice.*
-
-**Hasil pengujian:** [Tuliskan pesan uji dan hasil penerimaan pada Alice.]
+*Gambar 5. Pengiriman pesan dan penerimaan balasan pada terminal Alice.*
 
 #### 5.2 Komunikasi pada Sisi Bob
 
 ![Bob Chat](screenshots/06-bob-chat.png)
 
-*Gambar 9. Penerimaan pesan dan pengiriman balasan pada terminal Bob.*
+*Gambar 6. Penerimaan pesan dan pengiriman balasan pada terminal Bob.*
 
-**Hasil pengujian:** [Tuliskan pesan uji dan hasil penerimaan pada Bob.]
+Hasil Pengujian: Alice dan Bob berhasil bertukar pesan secara bergantian. Pesan dari Alice dapat diterima oleh Bob, dan sebaliknya, Bob dapat mengirimkan pesan yang diterima Alice. Hasil ini menunjukkan bahwa fungsi komunikasi dua arah pada aplikasi berjalan sesuai skenario pengujian.
 
 ### 6. Analisis Paket Jaringan Menggunakan Wireshark
 
@@ -446,10 +444,9 @@ tcp.port == 5000
 
 ![Wireshark KDC](screenshots/07-wireshark-kdc.png)
 
-*Gambar 10. Capture komunikasi TCP antara KDC dan Alice pada port 5000.*
+*Gambar 7. Capture komunikasi TCP antara KDC dan Alice pada port 5000.*
 
-**Hasil analisis:** [Jelaskan IP sumber, IP tujuan, dan informasi paket yang terlihat.]
-
+Hasil Pengamatan: Capture menunjukkan proses pembentukan koneksi TCP, pertukaran data aplikasi, dan penutupan koneksi antara Alice dan KDC. Paket diamati menggunakan display filter tcp.port == 5000.
 #### 6.2 Komunikasi Alice dan Bob
 
 Display filter:
@@ -460,37 +457,25 @@ tcp.port == 5001
 
 ![Wireshark Chat](screenshots/08-wireshark-chat.png)
 
-*Gambar 11. Capture komunikasi TCP antara Alice dan Bob pada port 5001.*
+*Gambar 8. Capture komunikasi TCP antara Alice dan Bob pada port 5001.*
 
 **Hasil analisis:** [Jelaskan arah komunikasi dan paket yang berhasil diamati.]
 
 #### 6.3 Analisis Payload Ciphertext
 
-![Wireshark Payload](screenshots/12-wireshark-payload.png)
+![Wireshark Payload](screenshots/09-wireshark-payload.png)
 
-*Gambar 12. Representasi data aplikasi pada paket komunikasi terenkripsi.*
+*Gambar 9. Representasi data aplikasi pada paket komunikasi terenkripsi.*
 
-**Hasil analisis:** [Jelaskan format payload yang terlihat dan apakah plaintext muncul secara langsung.]
+Hasil analisis: Hasil pengamatan menunjukkan bahwa pesan chat dikirim dalam format JSON dengan atribut type dan data. Atribut data berisi rangkaian karakter hexadecimal yang merepresentasikan data terenkripsi, bukan plaintext pesan yang dapat dibaca langsung. Pengamatan ini mendukung bahwa aplikasi mengirimkan ciphertext dalam format hexadecimal melalui komunikasi TCP.
 
-### 7. Ringkasan Hasil Pengujian
+### 7. Kesimpulan Pengujian
 
-| No. | Skenario Pengujian | Hasil | Status |
-|---|---|---|---|
-| 1 | Pengujian algoritma AES-128 | [Isi hasil] | [Lulus/Gagal] |
-| 2 | Menjalankan layanan KDC | [Isi hasil] | [Lulus/Gagal] |
-| 3 | Distribusi session key ke Alice | [Isi hasil] | [Lulus/Gagal] |
-| 4 | Proses verifikasi Bob | [Isi hasil] | [Lulus/Gagal] |
-| 5 | Pengiriman pesan Alice ke Bob | [Isi hasil] | [Lulus/Gagal] |
-| 6 | Pengiriman pesan Bob ke Alice | [Isi hasil] | [Lulus/Gagal] |
-| 7 | Capture komunikasi KDC–Alice | [Isi hasil] | [Lulus/Gagal] |
-| 8 | Capture komunikasi Alice–Bob | [Isi hasil] | [Lulus/Gagal] |
-| 9 | Pemeriksaan ciphertext | [Isi hasil] | [Lulus/Gagal] |
+Berdasarkan hasil pengujian, implementasi AES-128 manual berhasil melewati pengujian self-test untuk proses enkripsi, dekripsi, dan mode CBC, serta menghasilkan keluaran yang sesuai dengan test vector FIPS-197. Proses distribusi session key melalui KDC dan autentikasi Alice–Bob juga berhasil dijalankan sesuai alur protokol yang diimplementasikan, sebagaimana ditunjukkan oleh keberhasilan verifikasi respons KDC, pembukaan tiket, dan proses challenge-response. Pengujian komunikasi menunjukkan bahwa Alice dan Bob dapat bertukar pesan secara dua arah setelah sesi AES-CBC diaktifkan.
 
-### 8. Kesimpulan Pengujian
+Hasil pengamatan menggunakan Wireshark menunjukkan adanya pertukaran paket TCP antara KDC dan Alice pada port 5000, serta antara Alice dan Bob pada port 5001. Pemeriksaan melalui fitur Follow TCP Stream memperlihatkan payload chat dalam format JSON, dengan nilai data direpresentasikan sebagai rangkaian karakter hexadecimal yang diidentifikasi oleh implementasi sebagai ciphertext. Hasil ini mendukung bahwa fungsi utama sistem berjalan sesuai skenario pengujian, meskipun pengamatan format payload saja belum cukup untuk membuktikan keamanan kriptografis secara menyeluruh.
 
-Berdasarkan hasil pengujian yang telah dilakukan, [jelaskan apakah implementasi AES-128, distribusi session key, dan komunikasi dua arah berjalan sesuai tujuan]. Pengamatan menggunakan Wireshark menunjukkan [jelaskan hasil pengamatan paket dan representasi ciphertext].
-
-Pengujian ini digunakan untuk mengevaluasi kesesuaian implementasi terhadap kebutuhan tugas dan mengidentifikasi keterbatasan sistem yang masih perlu diperhatikan.
+Pengujian ini menunjukkan bahwa implementasi telah memenuhi fungsi dasar distribusi kunci dan komunikasi terenkripsi sesuai ruang lingkup tugas. Namun, aspek seperti ketahanan terhadap manipulasi pesan, validasi integritas ciphertext, dan keamanan pengelolaan kunci masih perlu dievaluasi lebih lanjut sebelum sistem dapat dianggap aman untuk penggunaan di luar lingkungan pembelajaran.uk mengevaluasi kesesuaian implementasi terhadap kebutuhan tugas dan mengidentifikasi keterbatasan sistem yang masih perlu diperhatikan.
 
 
 ## 11. Pembagian Tugas Kelompok
