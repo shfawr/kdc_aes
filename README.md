@@ -459,7 +459,7 @@ tcp.port == 5001
 
 *Gambar 8. Capture komunikasi TCP antara Alice dan Bob pada port 5001.*
 
-**Hasil analisis:** [Jelaskan arah komunikasi dan paket yang berhasil diamati.]
+Capture menunjukkan pertukaran paket TCP antara Alice (192.168.1.12) dan Bob (192.168.1.13) selama komunikasi pesan berlangsung. Port 5001 digunakan oleh Alice sebagai port layanan, sedangkan Bob menggunakan port sementara untuk koneksi TCP.
 
 #### 6.3 Analisis Payload Ciphertext
 
