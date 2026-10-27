@@ -102,9 +102,7 @@ kdc_aes/
 | `chat.py` | Pengelolaan pertukaran pesan Alice dan Bob. |
 | `aes/` | Modul implementasi algoritma AES manual. |
 | `utils/` | Fungsi pendukung encoding, validasi key, dan jaringan. |
-| `tests/` | Pengujian otomatis AES dan encoding. |
-
-**Catatan:** pastikan nama folder pengujian sesuai dengan repository. Jika folder yang tersedia bernama `test/`, gunakan nama tersebut pada struktur dan perintah pengujian.
+| `test/` | Pengujian otomatis AES dan encoding. |
 
 ---
 
@@ -286,8 +284,6 @@ Ganti `[IP_ALICE]` dengan IP aktual Alice yang dapat dijangkau dari Ubuntu VM.
 5. Uji komunikasi pesan dari Alice ke Bob.
 6. Uji balasan dari Bob ke Alice.
 
-**Penting:** perintah di atas harus disesuaikan jika argumen CLI pada versi kode aktual berbeda. Periksa dengan `python main.py --help` di Windows atau `python3 main.py --help` di Ubuntu.
-
 ---
 
 ## 9. Pengujian
@@ -326,8 +322,6 @@ python3 -m unittest discover -s test -v
 | 6 | Bob membalas pesan | Alice menerima balasan dengan benar. |
 | 7 | Format ciphertext | Ciphertext ditampilkan dalam format Hex. |
 | 8 | Pengujian jaringan | Komunikasi berhasil menggunakan IP aktual yang berbeda. |
-
-Catat hasil aktual setiap pengujian. Status berhasil hanya diberikan setelah skenario benar-benar dijalankan dan diverifikasi.
 
 ---
 
