@@ -379,8 +379,6 @@ Pengujian algoritma AES-128 dilakukan untuk memverifikasi bahwa proses enkripsi 
 
 *Gambar 1. Hasil pengujian implementasi AES-128 manual.*
 
-**Hasil pengujian:** [Isi berdasarkan output pengujian aktual, misalnya jumlah test yang berhasil dan gagal.]
-
 ### 3. Pengujian Key Distribution Center (KDC)
 
 KDC dijalankan sebagai layanan distribusi session key yang digunakan dalam proses komunikasi Alice dan Bob.
