@@ -81,6 +81,7 @@ Urutan pesan dan mekanisme verifikasi mengikuti skenario yang diterapkan dalam k
 
 ```text
 kdc_aes/
+├── .gitignore
 ├── main.py
 ├── kdc.py
 ├── alice.py
