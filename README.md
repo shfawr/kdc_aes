@@ -365,9 +365,9 @@ Pengujian sistem dilakukan menggunakan dua laptop Windows dan satu Ubuntu Virtua
 
 | Entitas | Perangkat | IP Address | Port |
 |---|---|---|---|
-| KDC | Windows Laptop 1 | `192.168.1.14` | `5000` |
-| Alice | Windows Laptop 2 | `192.168.1.12` | `5001` |
-| Bob | Ubuntu Virtual Machine | `192.168.1.13` | Client |
+| KDC | Windows Laptop 1 | `192.168.1.10` | `5000` |
+| Alice | Windows Laptop 2 | `192.168.1.7` | `5001` |
+| Bob | Ubuntu Virtual Machine | `192.168.1.11` | Client |
 
 Ketiga perangkat menggunakan jaringan lokal dengan subnet `192.168.1.0/24`. Konfigurasi tersebut digunakan untuk menguji distribusi session key dan komunikasi terenkripsi antara Alice dan Bob.
 
@@ -387,9 +387,9 @@ KDC dijalankan sebagai layanan distribusi session key yang digunakan dalam prose
 
 ![KDC Running](screenshots/02-kdc-running.png)
 
-*Gambar 2. Proses menjalankan KDC pada alamat IP 192.168.1.14 dan port 5000.*
+*Gambar 2. Proses menjalankan KDC pada alamat IP 192.168.1.10 dan port 5000.*
 
-Hasil Pengujian: Server KDC berhasil dijalankan pada 192.168.1.14:5000 dan berada dalam kondisi menunggu permintaan dari Alice.
+Hasil Pengujian: Server KDC berhasil dijalankan pada 192.168.1.10:5000 dan berada dalam kondisi menunggu permintaan dari Alice.
 
 ### 4. Pengujian Distribusi Session Key
 
@@ -460,7 +460,7 @@ tcp.port == 5001
 
 *Gambar 8. Capture komunikasi TCP antara Alice dan Bob pada port 5001.*
 
-Capture menunjukkan pertukaran paket TCP antara Alice (192.168.1.12) dan Bob (192.168.1.13) selama komunikasi pesan berlangsung. Port 5001 digunakan oleh Alice sebagai port layanan, sedangkan Bob menggunakan port sementara untuk koneksi TCP.
+Capture menunjukkan pertukaran paket TCP antara Alice (192.168.1.7) dan Bob (192.168.1.11) selama komunikasi pesan berlangsung. Port 5001 digunakan oleh Alice sebagai port layanan, sedangkan Bob menggunakan port sementara untuk koneksi TCP.
 
 #### 6.3 Analisis Payload Ciphertext
 
