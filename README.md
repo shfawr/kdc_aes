@@ -399,7 +399,7 @@ Alice menghubungi KDC untuk melakukan proses distribusi session key sesuai proto
 
 *Gambar 3. Proses Alice melakukan komunikasi dengan KDC.*
 
-Hasil Pengujian: Alice berhasil memverifikasi respons KDC, menerima koneksi Bob dari 192.168.1.13, dan menyelesaikan langkah 1–5 protokol. Setelah autentikasi berhasil, komunikasi menggunakan AES-CBC dinyatakan aktif oleh program.
+Hasil Pengujian: Alice berhasil memverifikasi respons KDC, menerima koneksi Bob dari 192.168.1.11, dan menyelesaikan langkah 1–5 protokol. Setelah autentikasi berhasil, komunikasi menggunakan AES-CBC dinyatakan aktif oleh program.
 
 #### 4.2 Proses Bob
 
